@@ -24,11 +24,11 @@ Add to your serverless.yml:
           - source: ../assets/
             globs: '**/*.css'
           - source: ../app/
-            empty: true
             globs:
               - '**/*.js'
               - '**/*.map'
        - bucket: my-other-bucket
+         empty: true
          prefix: subdir
          files:
           - source: ../email-templates/
@@ -47,8 +47,9 @@ You can specify `source` relative to the current directory.
 Each `source` has its own list of `globs`, which can be either a single glob,
 or a list of globs.
 
-Setting `empty` to `true` will delete all files inside the bucket. The prefix
-value is respected and files outside will not be deleted.
+Setting `empty` to `true` will delete all files inside the bucket before 
+uploading the new content to S3 bucket. The `prefix` value is respected and 
+files outside will not be deleted.
 
 Now you can upload all of these assets to your bucket by running:
 
@@ -77,7 +78,7 @@ basis:
           files:
 ```
 
-The default value is `public-read`. Options are defined
+The default value is `private`. Options are defined
 [here](http://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl).
 
 ## Content Type
@@ -195,6 +196,17 @@ a good starting point:
 }
 ```
 
+## Upload concurrency
+
+If you want to tweak the upload concurrency, change `uploadConcurrency` config:
+
+```
+config:
+  assets:
+    # defaults to 3
+    uploadConcurrency: 1
+```
+
 ## Verbosity
 
 Verbosity cloud be enabled using either of these methods:
@@ -204,7 +216,7 @@ Configuration:
 ```
   custom:
     assets:
-      auto: true
+      verbose: true
 ```
 
 Cli:
